@@ -17,7 +17,7 @@ public class Film {
     private final String name;
 
     //описание
-    @Size(max = 200, message = "Превышина максимальная длина описания фильма — 200 символов!")
+    @Size(max = 200, message = "Превышена максимальная длина описания фильма — 200 символов!")
     private String description;
 
     //дата релиза;

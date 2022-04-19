@@ -50,7 +50,7 @@ class UserControllerTest {
             "\"name\":\"Пользователь с совпадающим email\"," +
             "\"email\":\"mail@mail.ru\"," +
             "\"birthday\":\"1946-08-20\"," +
-            "\"description\":\"Пользовательдля проверки дублирования email\"}";
+            "\"description\":\"Пользователь для проверки дублирования email\"}";
 
     //json пользователя с совпадающим логином
     static final String userJsonDublLogin = "{" +
@@ -67,7 +67,7 @@ class UserControllerTest {
             "\"birthday\":\"1946-08-20\"," +
             "\"description\":\"Пользовательдля проверки создания пользователя с пустым email\"}";
 
-    //json пользователя с совпадаюим email
+    //json пользователя с некорректным email
     static final String userJsonBadEmail = "{" +
             "\"login\":\"test3\"," +
             "\"name\":\"Пользователь с некорректным email\"," +
