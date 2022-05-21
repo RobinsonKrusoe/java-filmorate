@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exceptions;
+package ru.yandex.filmorate.exceptions;
 
 //непроверяемое исключение
 public class ValidationException extends RuntimeException {
