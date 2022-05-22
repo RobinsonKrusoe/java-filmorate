@@ -3,7 +3,6 @@ package ru.yandex.filmorate.storage.user;
 import ru.yandex.filmorate.model.User;
 
 import java.util.List;
-import java.util.Set;
 
 //Интерфейс для работы с хранилищем Пользователей
 public interface UserStorage {
@@ -11,7 +10,7 @@ public interface UserStorage {
     User get(Integer id);
 
     //Получение друзей пользователя
-    Set<User> getFriends(Integer id);
+    List<User> getFriends(Integer id);
 
     //Добавление пользователя
     User create(User user);

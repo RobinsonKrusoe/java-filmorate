@@ -18,8 +18,32 @@ public class UserService {
     public UserService(UserStorage userStorage){
         this.userStorage = userStorage;
     }
+
+    //Возвращение всех пользователей
+    public List<User> findAll(){
+        return userStorage.findAll();
+    }
+
+    //Возвращение пользователя по запросу
+    public User get(int id){
+        return userStorage.get(id);
+    }
+
+    //Создание пользователя
+    public User create(User user) {
+        return userStorage.create(user);
+    }
+
+    //Обновление пользователя
+    public User update(User user) {
+        return userStorage.update(user);
+    }
+
     //Добавление в друзья
-    public void addFriend(User user, User friend){
+    public void addFriend(Integer id, Integer friendId){
+        User user = userStorage.get(id);
+        User friend = userStorage.get(friendId);
+
         if(user.getFriends() == null) user.setFriends(new HashSet<>());
         if(friend.getFriends() == null) friend.setFriends(new HashSet<>());
 
@@ -31,12 +55,20 @@ public class UserService {
     }
 
     //Удаление из друзей
-    public void delFriend(User user, User friend){
+    public void delFriend(Integer id, Integer friendId){
+        User user = userStorage.get(id);
+        User friend = userStorage.get(friendId);
+
         if (user.getFriends() != null && user.getFriends().contains(friend.getId())) {
             user.getFriends().remove(friend.getId());
             if(friend.getFriends() != null && friend.getFriends().contains(user.getId()))
                 friend.getFriends().remove(user.getId());
         }
+    }
+
+    //Возвращаем список пользователей, являющихся его друзьями
+    public List<User> getFriends(Integer id){
+        return userStorage.getFriends(id);
     }
 
     //Получение списка общих друзей

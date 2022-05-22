@@ -4,64 +4,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.service.user.UserService;
-import ru.yandex.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 //Класс контроллера для работы с пользователями
 @RestController
 @RequestMapping("/users")
 public class UserController{
     private UserService userService;
-    private UserStorage userStorage;
     @Autowired
-    public UserController(UserService userService, UserStorage userStorage){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.userStorage = userStorage;
     }
 
     //Возвращение всех пользователей
     @GetMapping
     public List<User> findAll(){
-        return userStorage.findAll();
+        return userService.findAll();
     }
 
     //Возвращение пользователя по запросу
     @GetMapping("/{id}")
     public User findUser(@PathVariable int id){
-        return userStorage.get(id);
+        return userService.get(id);
     }
 
     //Создание пользователя;
     @PostMapping
     public User create(@RequestBody @Valid User user) {
-        return userStorage.create(user);
+        return userService.create(user);
     }
 
     //Обновление пользователя;
     @PutMapping
     public User update(@RequestBody @Valid User user) {
-        return userStorage.update(user);
+        return userService.update(user);
     }
 
     //Добавление в друзья
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
-        userService.addFriend(userStorage.get(id), userStorage.get(friendId));
+        userService.addFriend(id,friendId);
     }
 
     //Удаление из друзей
     @DeleteMapping("/{id}/friends/{friendId}")
     public void delFriend(@PathVariable int id, @PathVariable int friendId) {
-        userService.delFriend(userStorage.get(id), userStorage.get(friendId));
+        userService.delFriend(id, friendId);
     }
 
     //Возвращаем список пользователей, являющихся его друзьями
     @GetMapping("/{id}/friends")
-    public Set<User> getFriends(@PathVariable int id){
-        return userStorage.getFriends(id);
+    public List<User> getFriends(@PathVariable int id){
+        return userService.getFriends(id);
     }
 
     //Возвращаем список друзей, общих с другим пользователем

@@ -10,7 +10,9 @@ import ru.yandex.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.storage.InMemoryItemStorage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 //Класс для реализации интерфейса для работы с хранилищем Пользователей
@@ -30,8 +32,8 @@ public class InMemoryUserStorage extends InMemoryItemStorage<User> implements Us
     }
 
     //Получение друзей пользователя
-    public Set<User> getFriends(Integer id){
-        Set<User> ret = new HashSet<>();
+    public List<User> getFriends(Integer id){
+        List<User> ret = new ArrayList<>();
         if(get(id).getFriends() != null){
             for(Integer i : get(id).getFriends())
                 ret.add(get(i));
