@@ -1,12 +1,10 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.filmorate.controllers;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import ru.yandex.practicum.filmorate.FilmorateApplication;
-import ru.yandex.practicum.filmorate.util.TestClient;
-
-import java.io.IOException;
+import ru.yandex.filmorate.FilmorateApplication;
+import ru.yandex.filmorate.util.TestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -79,17 +77,19 @@ class FilmControllerTest {
             "\"duration\":100}";
 
     //Эталонный json со списком из двух фильмов
-    static final String twoFilmLisyJson =
+    static final String twoFilmListJson =
             "[{\"id\":1," +
                 "\"name\":\"Новый фильм\"," +
                 "\"description\":\"Валидный пример фильма для вставки\"," +
                 "\"releaseDate\":\"1967-03-25\"," +
-                "\"duration\":100}," +
+                "\"duration\":100," +
+                "\"likes\":null}," +
              "{\"id\":100," +
                 "\"name\":\"Просто фильм\"," +
                 "\"description\":\"Фильм для обновления несуществующего идентификатора\"," +
                 "\"releaseDate\":\"1967-04-24\"," +
-                "\"duration\":100}]";
+                "\"duration\":100," +
+                "\"likes\":null}]";
 
     @BeforeAll
     public static void beforeAll() {
@@ -114,27 +114,27 @@ class FilmControllerTest {
 
         //Попытка вставки записи с уже существующим идентификатором
         tc.post(fServURL, filmJsonUpD);
-        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
 
         //Попытка вставки уже существующего фильма (совпадение названия и даты выхода)
         tc.post(fServURL, filmJsonOK);
-        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
 
         //Попытка вставки фильма с пустым названием
         tc.post(fServURL, filmJsonWithEmptyName);
-        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
 
         //Попытка вставки фильма с очень длинным описанием
         tc.post(fServURL, filmJsonWithTooBigDesc);
-        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
 
         //Попытка вставки фильма со слишком ранней датой выпуска
         tc.post(fServURL, filmJsonWithNegativeDuration);
-        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
 
         //Попытка вставки фильма с отрицательной продолжительностью
         tc.post(fServURL, filmJsonWithTooOldRelease);
-        assertEquals(500, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
+        assertEquals(400, tc.getLastResponseStatusCode(),"Ожидался другой код ответа!");
     }
 
     @Test
@@ -149,11 +149,11 @@ class FilmControllerTest {
 
         //Попытка обновления отсутствующего фильма
         tc.put(fServURL, filmJsonUpD1);
-        assertEquals(500, tc.getLastResponseStatusCode(),"Проблема с обновлением записи фильма!");
+        assertEquals(404, tc.getLastResponseStatusCode(),"Проблема с обновлением записи фильма!");
 
         //Попытка обновления фильма на слишком раннюю дату выпуска
         tc.put(fServURL, filmJsonWithTooOldReleaseUpD);
-        assertEquals(500, tc.getLastResponseStatusCode(),"Проблема с обновлением записи фильма!");
+        assertEquals(400, tc.getLastResponseStatusCode(),"Проблема с обновлением записи фильма!");
     }
 
     @Test
@@ -170,7 +170,7 @@ class FilmControllerTest {
         assertEquals(200, tc.getLastResponseStatusCode(),"Проблема с созданием записи фильма!");
 
         //Проверка полученного списка
-        assertEquals(twoFilmLisyJson, tc.get(fServURL),
+        assertEquals(twoFilmListJson, tc.get(fServURL),
                 "Возвращённый список фильмов не совпал с эталонным!");
     }
 }
