@@ -42,8 +42,8 @@ SELECT *
 ````SQL
 SELECT DISTINCT g.hame ganre_name
   FROM film f
-  LEFT JOIN film_ganre fg ON (f.film_id = fg.film_id) 
-  LEFT JOIN ganre g ON (fg.ganre_id = g.ganre_id)
+  JOIN film_ganre fg ON (f.film_id = fg.film_id) 
+  JOIN ganre g ON (fg.ganre_id = g.ganre_id)
  WHERE f.film_id in (SELECT friend_id
                        FROM likes l
                       WHERE l.user_id = :p_user);
