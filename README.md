@@ -59,7 +59,7 @@ SELECT *
                       WHERE f.user_id = :p_user_1
                         AND f.status = 'CONFIRMED')
    AND u.user_id in (SELECT friend_id
-                     FROM friends f
-                     WHERE f.user_id = :p_user_2
-                       AND f.status = 'CONFIRMED');
+                       FROM friends f
+                      WHERE f.user_id = :p_user_2
+                        AND f.status = 'CONFIRMED');
 ````
