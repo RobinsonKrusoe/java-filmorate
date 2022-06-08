@@ -10,6 +10,7 @@ import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.storage.InMemoryItemStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public class InMemoryFilmStorage extends InMemoryItemStorage<Film> implements Fi
     //Добавление лайка фильму
     public void addLike(Film film, User user){
         if (film != null && user != null){
-            if(film.getLikes() == null) film.setLikes(new HashSet<>());
+            if(film.getLikes() == null) film.setLikes(new ArrayList<>());
             film.getLikes().add(user.getId());
         }
     }

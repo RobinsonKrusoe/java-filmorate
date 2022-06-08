@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.filmorate.model.Film;
+import ru.yandex.filmorate.model.Mpa;
 import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.filmorate.storage.user.UserDbStorage;
@@ -57,7 +58,7 @@ class FilmorateApplicationTests {
         film.setDescription("Валидный пример фильма для вставки");
         film.setReleaseDate(LocalDate.parse("1967-03-25"));
         film.setDuration(100);
-        film.setMpa(Film.MPA.G);
+        film.setMpa(new Mpa(4, "G"));
 
         //Экземпляр фильма для обновления
         film1 = new Film();
@@ -66,7 +67,7 @@ class FilmorateApplicationTests {
         film1.setDescription("Валидный пример фильма после обновления");
         film1.setReleaseDate(LocalDate.parse("1967-04-24"));
         film1.setDuration(120);
-        film1.setMpa(Film.MPA.R);
+        film1.setMpa(new Mpa(4, "R"));
     }
 
     /* ------------ Пользователи ------------- */

@@ -13,6 +13,7 @@ import java.util.List;
 public class UserService {
     private UserStorage userStorage;
 
+    //Конструктор сервиса
     @Autowired
     public UserService(@Qualifier("UserDbStorage") UserStorage userStorage){
         this.userStorage = userStorage;

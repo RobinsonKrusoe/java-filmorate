@@ -23,10 +23,10 @@ public interface FilmStorage {
     List<Film> findAll();
 
     //Добавление лайка фильму
-    void addLike(Film film, User userId);
+    void addLike(Film film, User user);
 
     //Удаление лайка у фильма
-    void delLike(Film film, User userId);
+    void delLike(Film film, User user);
 
     //Получение списка наиболее популярных фильмов
     List<Film> getMostPopular(Integer count);
