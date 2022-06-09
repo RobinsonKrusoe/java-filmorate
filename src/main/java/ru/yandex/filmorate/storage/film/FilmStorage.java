@@ -1,6 +1,7 @@
 package ru.yandex.filmorate.storage.film;
 
 import ru.yandex.filmorate.model.Film;
+import ru.yandex.filmorate.model.User;
 
 import java.util.List;
 
@@ -20,4 +21,13 @@ public interface FilmStorage {
 
     //Список всех фильмов
     List<Film> findAll();
+
+    //Добавление лайка фильму
+    void addLike(Film film, User user);
+
+    //Удаление лайка у фильма
+    void delLike(Film film, User user);
+
+    //Получение списка наиболее популярных фильмов
+    List<Film> getMostPopular(Integer count);
 }

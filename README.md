@@ -14,8 +14,8 @@ ___
 | **_film_**       | Информация о фильмах                                                |
 | **_likes_**      | Таблица связи для хранения лайков пользователей на фильм            |
 | **_friends_**    | Таблица связи для хранения информации о дружбе между пользователями |
-| **_film_ganre_** | Таблица связи для хранения информации о жанрах фильма               |
-| **_ganre_**      | Справочная таблица жанров фильма                                    |
+| **_film_genre_** | Таблица связи для хранения информации о жанрах фильма               |
+| **_genre_**      | Справочная таблица жанров фильма                                    |
 
 Примеры обращения к данным.
 
@@ -41,10 +41,10 @@ SELECT *
 
 Получение жанров фильмов, которые нравятся пользователю p_user:  
 ````SQL
-SELECT DISTINCT g.hame ganre_name
+SELECT DISTINCT g.hame genre_name
   FROM film f
   JOIN film_ganre fg ON (f.film_id = fg.film_id) 
-  JOIN ganre g ON (fg.ganre_id = g.ganre_id)
+  JOIN genre g ON (fg.genre_id = g.genre_id)
  WHERE f.film_id in (SELECT friend_id
                        FROM likes l
                       WHERE l.user_id = :p_user);

@@ -5,11 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.yandex.filmorate.exceptions.FilmAlreadyExistException;
 import ru.yandex.filmorate.exceptions.FilmNotFoundException;
-import ru.yandex.filmorate.exceptions.ValidationException;
 import ru.yandex.filmorate.model.Film;
+import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.storage.InMemoryItemStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //Класс для реализации интерфейса для работы с хранилищем Фильмов
 @Component
@@ -17,7 +21,7 @@ public class InMemoryFilmStorage extends InMemoryItemStorage<Film> implements Fi
     protected static final Logger log = LoggerFactory.getLogger(InMemoryFilmStorage.class);
     private static final LocalDate FIRST_POSSIBLE_RELEASE = LocalDate.of(1895, 12, 28);
 
-    //Получение пользователя
+    //Получение фильма
     @Override
     public Film get(Integer id){
         if(items.containsKey(id))
@@ -31,7 +35,6 @@ public class InMemoryFilmStorage extends InMemoryItemStorage<Film> implements Fi
     //добавление фильма
     @Override
     public Film create(Film film) {
-        validateFilm(film);
         //Проверка занятости идентификатора
         if (items.containsKey(film.getId())) {
             log.error("Фильм с номером #" + film.getId() + " уже существует!");
@@ -63,7 +66,6 @@ public class InMemoryFilmStorage extends InMemoryItemStorage<Film> implements Fi
     //обновление фильма
     @Override
     public Film update(Film film) {
-        validateFilm(film);
         if(items.containsKey(film.getId())) {
             items.replace(film.getId(), film);
             log.info("Изменён фильм: " + film);
@@ -84,12 +86,30 @@ public class InMemoryFilmStorage extends InMemoryItemStorage<Film> implements Fi
             throw new FilmNotFoundException("Фильм #" + id + " не найден!");
         }
     }
-
-    //Дополнительная общая валидация
-    private void validateFilm(Film film){
-        if (FIRST_POSSIBLE_RELEASE.isAfter(film.getReleaseDate())) {
-            log.error("Дата релиза — не может быть раньше 28 декабря 1895 года!");
-            throw new ValidationException("Дата релиза — не может быть раньше 28 декабря 1895 года!");
+    //Добавление лайка фильму
+    public void addLike(Film film, User user){
+        if (film != null && user != null){
+            if(film.getLikes() == null) film.setLikes(new ArrayList<>());
+            film.getLikes().add(user.getId());
         }
+    }
+
+    //Удаление лайка у фильма
+    public void delLike(Film film, User user){
+        if (film != null && user != null && film.getLikes().contains(user.getId())){
+            film.getLikes().remove(user.getId());
+        }
+    }
+
+    //Получение списка наиболее популярных фильмов
+    public List<Film> getMostPopular(Integer count){
+        return findAll().stream()
+                .sorted((film1, film2) -> Integer.compare((film2 == null ||
+                                film2.getLikes() == null) ? 0 : film2.getLikes().size(),
+                        (film1 == null ||
+                                film1.getLikes() == null) ? 0 : film1.getLikes().size()))
+                .limit(count)
+                .collect(Collectors.toList());
+
     }
 }

@@ -1,12 +1,11 @@
 package ru.yandex.filmorate.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.filmorate.model.User;
 import ru.yandex.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 //Класс для операций с Пользователями
@@ -14,8 +13,9 @@ import java.util.List;
 public class UserService {
     private UserStorage userStorage;
 
+    //Конструктор сервиса
     @Autowired
-    public UserService(UserStorage userStorage){
+    public UserService(@Qualifier("UserDbStorage") UserStorage userStorage){
         this.userStorage = userStorage;
     }
 
@@ -41,29 +41,12 @@ public class UserService {
 
     //Добавление в друзья
     public void addFriend(Integer id, Integer friendId){
-        User user = userStorage.get(id);
-        User friend = userStorage.get(friendId);
-
-        if(user.getFriends() == null) user.setFriends(new HashSet<>());
-        if(friend.getFriends() == null) friend.setFriends(new HashSet<>());
-
-        if (!user.getFriends().contains(friend.getId())) {
-            user.getFriends().add(friend.getId());
-            if(!friend.getFriends().contains(user.getId()))
-                friend.getFriends().add(user.getId());
-        }
+        userStorage.addFriend(id, friendId);
     }
 
     //Удаление из друзей
     public void delFriend(Integer id, Integer friendId){
-        User user = userStorage.get(id);
-        User friend = userStorage.get(friendId);
-
-        if (user.getFriends() != null && user.getFriends().contains(friend.getId())) {
-            user.getFriends().remove(friend.getId());
-            if(friend.getFriends() != null && friend.getFriends().contains(user.getId()))
-                friend.getFriends().remove(user.getId());
-        }
+        userStorage.delFriend(id, friendId);
     }
 
     //Возвращаем список пользователей, являющихся его друзьями
@@ -73,16 +56,6 @@ public class UserService {
 
     //Получение списка общих друзей
     public List<User> getCommonFriends(Integer id, Integer otherId){
-        User user = userStorage.get(id);
-        User other = userStorage.get(otherId);
-
-        List<User> ret = new ArrayList<>();
-        if (user.getFriends() != null && other.getFriends() != null){
-            for(Integer i : user.getFriends()){
-                if(other.getFriends().contains(i))
-                    ret.add(userStorage.get(i));
-            }
-        }
-        return ret;
+        return userStorage.getCommonFriends(id, otherId);
     }
 }
